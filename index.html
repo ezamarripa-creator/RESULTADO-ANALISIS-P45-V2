@@ -105,12 +105,16 @@ a{color:var(--plumbago);text-decoration:none}
 .filter-bar select,.filter-bar input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:13px}
 .filter-bar select:focus,.filter-bar input:focus{outline:none;border-color:var(--plumbago)}
 /* Charts */
-.charts-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);min-height:280px}
-.chart-box h6{margin:0 0 10px;font-weight:700;color:var(--plumbago-dark);font-size:13px;display:flex;justify-content:space-between;align-items:center}
-.chart-box canvas{max-height:260px}
+.charts-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.chart-box h6{margin:0 0 12px;font-weight:700;color:var(--plumbago-dark);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.chart-canvas-wrap{position:relative;flex:1;width:100%;height:360px}
+.chart-canvas-wrap.tall{height:480px}
+.chart-canvas-wrap.xtall{height:620px}
+.chart-canvas-wrap canvas{position:absolute;inset:0;width:100%!important;height:100%!important}
 .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
 @media(max-width:1200px){.col-3,.col-4{grid-column:span 6}.col-8{grid-column:span 12}}
+@media(max-width:700px){.chart-canvas-wrap,.chart-canvas-wrap.tall,.chart-canvas-wrap.xtall{height:340px}}
 @media(max-width:700px){.col-3,.col-4,.col-6,.col-8{grid-column:span 12}}
 /* Loader */
 .loader-wrap{position:fixed;inset:0;background:rgba(246,245,241,.92);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:9999;gap:14px}
@@ -216,35 +220,41 @@ html[data-theme="dark"] .glass{background:rgba(28,33,48,.7)}
   </div>
 
   <!-- KPIs -->
-  <div class="section-title"><i class="fa-solid fa-flag"></i> Indicadores Clave</div>
-  <div class="kpi-grid" id="kpiGrid"></div>
+  <section data-sect="dashboard indicators risk">
+    <div class="section-title"><i class="fa-solid fa-flag"></i> Indicadores Clave</div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
 
   <!-- Charts -->
-  <div class="section-title"><i class="fa-solid fa-chart-column"></i> Visualizaciones</div>
-  <div class="charts-grid">
-    <div class="chart-box col-4"><h6>Gauge de Cumplimiento <span class="badge-sm badge-info">IGCP</span></h6><canvas id="chGauge"></canvas></div>
-    <div class="chart-box col-4"><h6>Distribución de Dictamen</h6><canvas id="chDictamen"></canvas></div>
-    <div class="chart-box col-4"><h6>Cumplimiento por Turno</h6><canvas id="chTurno"></canvas></div>
-    <div class="chart-box col-8"><h6>Ranking de Planteles (Cumplimiento %)</h6><canvas id="chRanking"></canvas></div>
-    <div class="chart-box col-4"><h6>Cumplimiento por Parcial</h6><canvas id="chParcial"></canvas></div>
-    <div class="chart-box col-6"><h6>Top 10 Planteles</h6><canvas id="chTop"></canvas></div>
-    <div class="chart-box col-6"><h6>Bottom 10 Planteles</h6><canvas id="chBottom"></canvas></div>
-    <div class="chart-box col-6"><h6>Riesgo Académico (Radar)</h6><canvas id="chRisk"></canvas></div>
-    <div class="chart-box col-6"><h6>Histograma de Diferencias</h6><canvas id="chHist"></canvas></div>
-  </div>
+  <section data-sect="dashboard visuals">
+    <div class="section-title"><i class="fa-solid fa-chart-column"></i> Visualizaciones</div>
+    <div class="charts-grid">
+      <div class="chart-box col-4" data-sect="dashboard visuals"><h6>Gauge de Cumplimiento <span class="badge-sm badge-info">IGCP</span></h6><div class="chart-canvas-wrap"><canvas id="chGauge"></canvas></div></div>
+      <div class="chart-box col-4" data-sect="dashboard visuals"><h6>Distribución de Dictamen</h6><div class="chart-canvas-wrap"><canvas id="chDictamen"></canvas></div></div>
+      <div class="chart-box col-4" data-sect="dashboard visuals"><h6>Cumplimiento por Turno</h6><div class="chart-canvas-wrap"><canvas id="chTurno"></canvas></div></div>
+      <div class="chart-box col-8" data-sect="dashboard visuals ranking"><h6>Ranking de Planteles (Cumplimiento %)</h6><div class="chart-canvas-wrap xtall"><canvas id="chRanking"></canvas></div></div>
+      <div class="chart-box col-4" data-sect="dashboard visuals"><h6>Cumplimiento por Parcial</h6><div class="chart-canvas-wrap"><canvas id="chParcial"></canvas></div></div>
+      <div class="chart-box col-6" data-sect="dashboard visuals ranking"><h6>Top 10 Planteles</h6><div class="chart-canvas-wrap tall"><canvas id="chTop"></canvas></div></div>
+      <div class="chart-box col-6" data-sect="dashboard visuals ranking"><h6>Bottom 10 Planteles</h6><div class="chart-canvas-wrap tall"><canvas id="chBottom"></canvas></div></div>
+      <div class="chart-box col-6" data-sect="dashboard visuals risk"><h6>Riesgo Académico (Radar)</h6><div class="chart-canvas-wrap tall"><canvas id="chRisk"></canvas></div></div>
+      <div class="chart-box col-6" data-sect="dashboard visuals risk"><h6>Histograma de Diferencias</h6><div class="chart-canvas-wrap"><canvas id="chHist"></canvas></div></div>
+    </div>
+  </section>
 
   <!-- Tabla -->
-  <div class="section-title"><i class="fa-solid fa-table"></i> Tabla Inteligente de Docentes</div>
-  <div class="table-cbd">
-    <table id="tbl" class="table table-sm table-striped" style="width:100%">
-      <thead><tr>
-        <th>#Plantel</th><th>Plantel</th><th>Matrícula</th><th>Docente</th><th>Turno</th>
-        <th>Reg.</th><th>1er P.</th><th>2do P.</th><th>3er P.</th>
-        <th>Materias</th><th>Esperadas</th><th>Diferencia</th><th>Cumpl. %</th><th>Dictamen</th><th>Estatus</th>
-      </tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <section data-sect="dashboard table">
+    <div class="section-title"><i class="fa-solid fa-table"></i> Tabla Inteligente de Docentes</div>
+    <div class="table-cbd">
+      <table id="tbl" class="table table-sm table-striped nowrap" style="width:100%">
+        <thead><tr>
+          <th>#Plantel</th><th>Plantel</th><th>Matrícula</th><th>Docente</th><th>Turno</th>
+          <th>Reg.</th><th>1er P.</th><th>2do P.</th><th>3er P.</th>
+          <th>Materias</th><th>Esperadas</th><th>Diferencia</th><th>Cumpl. %</th><th>Dictamen</th><th>Estatus</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
 <footer class="hidden" id="footer">
@@ -495,7 +505,19 @@ const UI = {
     document.getElementById('crumbTitle').textContent = map[section]||'Dashboard';
     if (section==='about'){
       Swal.fire({icon:'info',title:'COBAED · Planeaciones 2026B',html:'<div style="text-align:left;font-size:13px"><b>Versión:</b> 1.0.0<br><b>Arquitectura:</b> MVC modular ES2023<br><b>Fuente:</b> Google Drive (Sheet ID configurado)<br><b>Autor:</b> Coordinación Académica COBAED</div>',confirmButtonColor:CONFIG.COLORS.plumbago});
+      return;
     }
+    // Toggle visibility of sections by data-sect attribute
+    document.querySelectorAll('[data-sect]').forEach(node=>{
+      const list = node.getAttribute('data-sect').split(/\s+/);
+      node.style.display = list.includes(section) ? '' : 'none';
+    });
+    // Filters visible for all data sections
+    document.getElementById('filters').style.display = '';
+    // Redraw charts (canvases just became visible → need resize)
+    setTimeout(()=>{ Object.values(State.charts).forEach(c=>c && c.resize && c.resize()); }, 60);
+    if (State.dt) setTimeout(()=>State.dt.columns.adjust().draw(false), 80);
+    window.scrollTo({top:0,behavior:'smooth'});
   }
 };
 
@@ -531,6 +553,10 @@ const Render = {
     if (State.charts[id]) State.charts[id].destroy();
     const ctx = document.getElementById(id);
     if (!ctx) return;
+    cfg.options = cfg.options || {};
+    cfg.options.responsive = true;
+    cfg.options.maintainAspectRatio = false;
+    cfg.options.plugins = Object.assign({legend:{position:'bottom',labels:{boxWidth:12,padding:10,font:{size:11}}}}, cfg.options.plugins||{});
     State.charts[id] = new Chart(ctx, cfg);
   },
   charts(rows, k){
@@ -583,6 +609,7 @@ const Render = {
     State.dt = $('#tbl').DataTable({
       data: rows.map(Render.rowMap),
       pageLength: 15, lengthMenu:[10,15,25,50,100],
+      scrollX: true, autoWidth: false,
       language:{url:'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-MX.json'},
       dom:'<"row"<"col-md-6"B><"col-md-6"f>>rtip',
       buttons:[
